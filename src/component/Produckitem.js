@@ -2,16 +2,33 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Axios from 'axios'
 import { connect } from 'react-redux'
-import axios from 'axios'
 
 class ProductItem extends Component {
-    addCart = () => {
+    addCart = (productCart) => {
         const idUser = this.props.user.id
-        const qty = this.editQty.value
+        const qty = this.qty.value
 
         var { id, name, price, src} = this.props.barang
 
-    if(qty > 0 && idUser !==''){
+    if(this.props.user.username !==''){
+        if(!(Number.isInteger(qty))) {
+            alert("Masukkan Angka Jumlah Barang")
+        } else {
+         
+            Axios.get(
+                ' http://localhost:2019/Cart',
+                {
+                    params: {
+                        idProduct: productCart.id,
+                        idUser: this.props.user.id
+                    }
+                }
+            ).then(res => {
+                if(res.data.length < 1) {
+
+                }
+            })
+        }
 
         Axios.post(
             'http://localhost:2019/Cart', {
@@ -24,6 +41,7 @@ class ProductItem extends Component {
             }).then ( res => {
                 console.log(res)
                 alert('data berhasil di input')
+                document.location.reload(true)
             })
     } else {
         if(idUser === ''){
@@ -34,14 +52,15 @@ class ProductItem extends Component {
     }}
 
     render(){
-        var {id, name, price, src} = this.props.barang 
+        var {id, name, price, src, stock} = this.props.barang 
         return (
             <div className="card col-3 m-5">
-                <img src={src} className='card-img-top'/>
+                <img  className='card-img-top' src={src}/>
                 <div className='card-body'>
                     <h5 className='card-title'>{name}</h5>
                     <p className='card-text'>Rp. {price}</p>
-                    <input type='text' ref={(input)=>{this.editQty = input}} className='form-control'/>
+                    <p className='card-text'>Stock barang = {stock}</p>
+                    <input className="from-control" ref={input => {this.qty = input}} type='text' defaultValue='0'></input>
                     <Link to={'/detailproduct/' + id}>
                         <button className='btn btn-outline-primary btn-block'>Details</button>
                     </Link>

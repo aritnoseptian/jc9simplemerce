@@ -42,7 +42,7 @@ class ManageProduct extends Component {
     getProduct = () => {
         axios.get('http://localhost:2019/products')
             .then(res => {
-               this.setState({products: res.data, selectedId: 0})
+               this.setState({products: res.data, selectedId : 0 })
             })
     }
 
@@ -50,15 +50,17 @@ class ManageProduct extends Component {
         const name = this.name.value
         const desc = this.desc.value
         const price = parseInt(this.price.value)
-        const pict = this.pict.value
+        const stock = this.stock.value
+        const src = this.pict.value
 
         axios.post(
             'http://localhost:2019/products',
             {
-                desc,
-                name,
-                price,
-                src : pict
+                nama: name,
+                desc: desc,
+                price: price,
+                stock: stock,
+                src : src
             }
         ).then(res => {
             // GET DATA
@@ -76,8 +78,9 @@ class ManageProduct extends Component {
                         <td>{item.desc}</td>
                         <td>{item.price}</td>
                         <td>
-                            <img className='list' width='65px' src={item.src}/>
+                        <img className='list' width='65px' src={item.src}/>
                         </td>
+                        
                         <td>
                             <button onClick={() => {this.setState({selectedId: item.id})}} className = 'btn btn-primary'>Edit</button>
                             <button onClick={()=>{this.onDeleteItem(item.id)}} className = 'btn btn-warning'>Delete</button>
